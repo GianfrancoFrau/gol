@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import GolGrid from '@/components/GolGrid.vue';
 
-
 </script>
 
 <template>

@@ -36,7 +36,7 @@ onMounted(init);
 <template>
   <div class="gol-grid">
     <div class="gol-row" v-for="(row, i) in grid" :key="i">
-      <GridCell v-for="(c, j) in row" :key="i + j" :index="i + j" :alive="c.alive" @mousedown="onMouseDown(i, j)" />
+      <GridCell v-for="(c, j) in row" :key="i + j" :index="i + j" :alive="c.alive" />
     </div>
   </div>
 </template>

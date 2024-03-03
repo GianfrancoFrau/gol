@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { onMounted } from 'vue';
 
-
 defineProps({
   index: Number,
   alive: {
@@ -32,7 +31,7 @@ defineProps({
 
   &.alive,
   &:hover {
-    background-color: var(--vt-c-indigo);
+    background-color: var(--vt-c-white);
   }
 }
 </style>
