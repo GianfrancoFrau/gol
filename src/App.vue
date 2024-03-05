@@ -3,11 +3,17 @@
     <h1>Game Of Life</h1>
 
     <div class="buttons">
-      <button class="btn">
+      <button class="btn" :disabled="canStop" @click="start()">
         <IconShuffle />
       </button>
-      <button class="btn" disabled>
+      <!-- <button class="btn" v-if="canStop" @click="pause()">
+        <IconPause />
+      </button> -->
+      <button class="btn" :disabled="!canStop" @click="stop()">
         <IconStop />
+      </button>
+      <button class="btn" @click="clear()">
+        clear
       </button>
       <button class="btn">
         info
@@ -17,26 +23,48 @@
     </div>
   </header>
 
-  <RouterView />
+  <main>
+    <GolGrid ref="grid"></GolGrid>
+  </main>
+
+  <!-- <RouterView /> -->
 </template>
 
 <script setup lang="ts">
 
-/*
-
-1. Any live cell with fewer than two live neighbours dies, as if by underpopulation.
-2. Any live cell with two or three live neighbours lives on to the next generation.
-3. Any live cell with more than three live neighbours dies, as if by overpopulation.
-4. Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.
-
-*/
-
-import { RouterView } from 'vue-router'
+// import { RouterView } from 'vue-router'
 // import IconPlay from './components/icons/IconPlay.vue';
 import IconStop from './components/icons/IconStop.vue';
 import IconShuffle from './components/icons/IconShuffle.vue';
+import GolGrid from '@/components/GolGrid.vue';
+import { ref } from 'vue';
+import IconPause from './components/icons/IconPause.vue';
 
+const grid = ref(null);
+const canStop = ref(false);
 
+const start = () => {
+  console.log('APP start');
+  canStop.value = true;
+  window.dispatchEvent(new CustomEvent('gol:start'));
+}
+
+const stop = () => {
+  console.log('APP stop');
+  canStop.value = false;
+  window.dispatchEvent(new CustomEvent('gol:stop'));
+}
+
+const pause = () => {
+  console.log('APP pause');
+  canStop.value = false;
+  window.dispatchEvent(new CustomEvent('gol:pause'));
+}
+
+const clear = () => {
+  stop();
+  window.dispatchEvent(new CustomEvent('gol:clear'));
+}
 
 </script>
 
@@ -68,6 +96,10 @@ header {
       color: var(--color-text);
       border: 1px solid var(--color-border);
       margin-right: 0.3rem;
+
+      &:disabled {
+        opacity: 0.6;
+      }
 
       svg {
         transform: scale(1.2);
