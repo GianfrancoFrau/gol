@@ -1,31 +1,31 @@
 <template>
   <header>
-    <h1>Game Of Life</h1>
+    <h1>{{ title }}</h1>
 
     <div class="buttons">
-      <button class="btn" :disabled="canStop" @click="start()">
+      <button class="btn" :disabled="canStop" @click="random()">
         <IconShuffle />
       </button>
-      <!-- <button class="btn" v-if="canStop" @click="pause()">
-        <IconPause />
-      </button> -->
+      <button class="btn" :disabled="canStop" @click="start()">
+        <IconPlay />
+      </button>
       <button class="btn" :disabled="!canStop" @click="stop()">
         <IconStop />
       </button>
       <button class="btn" @click="clear()">
-        clear
+        reset
       </button>
-      <button class="btn">
+      <button class="btn" @click="openInfoDialog()">
         info
       </button>
-      <!-- <RouterLink to="info">INFO</RouterLink>
-      <span>Change theme</span> -->
     </div>
   </header>
 
   <main>
     <GolGrid ref="grid"></GolGrid>
   </main>
+
+  <InfoDialog :open="infoDialogOpen"></InfoDialog>
 
   <!-- <RouterView /> -->
 </template>
@@ -38,15 +38,31 @@ import IconStop from './components/icons/IconStop.vue';
 import IconShuffle from './components/icons/IconShuffle.vue';
 import GolGrid from '@/components/GolGrid.vue';
 import { ref } from 'vue';
-import IconPause from './components/icons/IconPause.vue';
+import InfoDialog from './components/InfoDialog.vue';
+import IconPlay from './components/icons/IconPlay.vue';
 
+const title = ref('GOL');
 const grid = ref(null);
+const infoDialogOpen = ref(false);
 const canStop = ref(false);
+
+const openInfoDialog = () => {
+  infoDialogOpen.value = true;
+}
+
+const closeInfoDialog = () => {
+  infoDialogOpen.value = false;
+}
 
 const start = () => {
   console.log('APP start');
   canStop.value = true;
   window.dispatchEvent(new CustomEvent('gol:start'));
+}
+
+const random = () => {
+  console.log('APP random');
+  window.dispatchEvent(new CustomEvent('gol:random'));
 }
 
 const stop = () => {
@@ -62,9 +78,11 @@ const pause = () => {
 }
 
 const clear = () => {
-  stop();
+  canStop.value = false;
   window.dispatchEvent(new CustomEvent('gol:clear'));
 }
+
+window.addEventListener('gol:close-dialog', () => closeInfoDialog());
 
 </script>
 

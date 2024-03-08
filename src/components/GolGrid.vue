@@ -9,8 +9,7 @@ const grid = ref([] as any);
 const running = ref(false);
 const gen = ref(0);
 const speed = ref(500);
-
-let generationInterval: any = null;
+const generationTimer = ref(0);
 let population: any = {};
 
 const getNeighbours = (x: number, y: number) => {
@@ -18,21 +17,21 @@ const getNeighbours = (x: number, y: number) => {
   let n = 0;
 
   // top
-  if(g[x-1] && g[x-1][y] && g[x-1][y].alive) n++;
+  if (g[x - 1] && g[x - 1][y] && g[x - 1][y].alive) n++;
   // top-right
-  if(g[x-1] && g[x-1][y+1] && g[x-1][y+1].alive) n++;
+  if (g[x - 1] && g[x - 1][y + 1] && g[x - 1][y + 1].alive) n++;
   // top-left
-  if(g[x-1] && g[x-1][y-1] && g[x-1][y-1].alive) n++;
+  if (g[x - 1] && g[x - 1][y - 1] && g[x - 1][y - 1].alive) n++;
   // left
-  if(g[y-1] && g[x][y-1].alive) n++;
+  if (g[y - 1] && g[x][y - 1].alive) n++;
   // right
-  if(g[y+1] && g[x][y+1].alive) n++;
+  if (g[y + 1] && g[x][y + 1].alive) n++;
   // bottom
-  if(g[x+1] && g[x+1][y].alive) n++;
+  if (g[x + 1] && g[x + 1][y].alive) n++;
   // bottom-right
-  if(g[x+1] && g[x+1][y+1] && g[x+1][y+1].alive) n++;
+  if (g[x + 1] && g[x + 1][y + 1] && g[x + 1][y + 1].alive) n++;
   // bottom-right
-  if(g[x+1] && g[x+1][y-1] && g[x+1][y-1].alive) n++;
+  if (g[x + 1] && g[x + 1][y - 1] && g[x + 1][y - 1].alive) n++;
 
   return n;
 }
@@ -70,40 +69,34 @@ const isAlive = (alive: boolean, x: number, y: number) => {
 }
 
 const stopGeneration = () => {
-  gen.value = 0;
-  clearInterval(generationInterval);
+  clearInterval(generationTimer.value);
+  generationTimer.value = 0;
+  console.log('stopGeneration', generationTimer.value);
+}
+
+const generate = () => {
+  const g = [...grid.value]
+  for (let x = 0; x < rows; x++) {
+    g[x] = [...g[x]];
+    for (let y = 0; y < cols; y++) {
+      g[x][y] = { alive: isAlive(g[x][y].alive, x, y) }
+    }
+  }
+  grid.value = g;
+  gen.value = gen.value + 1;
+
+  console.log('generation', gen.value);
 }
 
 const startGeneration = () => {
 
-  generationInterval = setInterval(() => {
-    const g = [...grid.value]
-    for (let x = 0; x < rows; x++) {
-      g[x] = [...g[x]];
-      for (let y = 0; y < cols; y++) {
-        g[x][y] = { alive: isAlive(g[x][y].alive, x, y) }
-      }
-    }
-    grid.value = g;
-    gen.value = gen.value + 1;
-
-    console.log('generation', gen.value);
-
+  generationTimer.value = setInterval(() => {
+    generate();
   }, speed.value);
 }
 
-const start = () => {
-  running.value = true;
-  resetGrid();
-
-  startGeneration();
-
-  console.log('GOL-GRID start', running.value);
-}
-
-const stop = () => {
-  stopGeneration();
-  running.value = false;
+const resetGen = () => {
+  gen.value = 0;
 }
 
 const resetGrid = (init: boolean = false) => {
@@ -122,21 +115,49 @@ const onCellClick = (x: number, y: number) => {
   console.log('onCellClick', x, y, grid.value[x][y])
 }
 
+const stop = () => {
+  stopGeneration();
+  running.value = false;
+}
+
+const start = () => {
+  resetGrid();
+  startGeneration();
+  running.value = true;
+
+  console.log('start', running.value);
+}
+
 const clear = () => {
+  if(generationTimer.value) {
+    stop();
+  }
   resetGrid(true);
+  resetGen();
+}
+
+const random = () => {
+  resetGrid();
+  resetGen();
 }
 
 const listenToEvents = () => {
   window.addEventListener('gol:start', start);
+  window.addEventListener('gol:random', random);
   window.addEventListener('gol:clear', clear);
+  window.addEventListener('gol:stop', stop);
 }
 
 const stopListenToEvents = () => {
   window.removeEventListener('gol:start', start);
+  window.removeEventListener('gol:random', random);
   window.removeEventListener('gol:clear', clear);
+  window.removeEventListener('gol:stop', stop);
 }
 
 const init = () => {
+
+  resetGrid(true);
 
   population = computed(() => {
     let a = 0;
@@ -156,7 +177,6 @@ const init = () => {
     };
   })
 
-  resetGrid(true);
   listenToEvents();
 }
 
