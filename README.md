@@ -7,8 +7,8 @@ A little exercise to learn and experiment with vue js 3.
 ## Goals and features
 
 - [x] Use <a href="https://vuejs.org/api/composition-api-setup.html" target="_blank">composition api</a>
-- [] Use store
-- [] Responsive UI
-- [] UI controls
-- [] Start from model
-- [] Draw
+- [ ] Use store
+- [ ] Responsive UI
+- [ ] UI controls
+- [ ] Start from model
+- [ ] Draw
