@@ -3,13 +3,16 @@
     <h1>{{ title }}</h1>
 
     <div class="buttons">
-      <button class="btn" :disabled="canStop" @click="random()">
+      <button class="btn" :disabled="started" @click="random()">
         <IconShuffle />
       </button>
-      <button class="btn" :disabled="canStop" @click="start()">
+      <button class="btn" v-if="canPlay" @click="start()">
         <IconPlay />
       </button>
-      <button class="btn" :disabled="!canStop" @click="stop()">
+      <button class="btn" v-if="canPause" @click="pause()">
+        <IconPause />
+      </button>
+      <button class="btn" :disabled="!started" @click="stop()">
         <IconStop />
       </button>
       <button class="btn" @click="clear()">
@@ -22,29 +25,34 @@
   </header>
 
   <main>
-    <GolGrid ref="grid"></GolGrid>
+    <GolGrid></GolGrid>
   </main>
 
   <InfoDialog :open="infoDialogOpen"></InfoDialog>
-
-  <!-- <RouterView /> -->
 </template>
 
 <script setup lang="ts">
 
-// import { RouterView } from 'vue-router'
-// import IconPlay from './components/icons/IconPlay.vue';
 import IconStop from './components/icons/IconStop.vue';
 import IconShuffle from './components/icons/IconShuffle.vue';
 import GolGrid from '@/components/GolGrid.vue';
-import { ref } from 'vue';
+import { computed, onMounted, onUpdated, ref } from 'vue';
 import InfoDialog from './components/InfoDialog.vue';
 import IconPlay from './components/icons/IconPlay.vue';
+import IconPause from './components/icons/IconPause.vue';
 
 const title = ref('GOL');
-const grid = ref(null);
 const infoDialogOpen = ref(false);
-const canStop = ref(false);
+const started = ref(false);
+const paused = ref(false);
+
+const canPlay = computed(() => {
+  return !started.value || paused.value;
+})
+
+const canPause = computed(() => {
+  return started.value && !paused.value;
+})
 
 const openInfoDialog = () => {
   infoDialogOpen.value = true;
@@ -56,8 +64,9 @@ const closeInfoDialog = () => {
 
 const start = () => {
   console.log('APP start');
-  canStop.value = true;
-  window.dispatchEvent(new CustomEvent('gol:start'));
+  window.dispatchEvent(new CustomEvent('gol:start', { detail: { resume: started.value } }));
+  started.value = true;
+  paused.value = false;
 }
 
 const random = () => {
@@ -67,22 +76,32 @@ const random = () => {
 
 const stop = () => {
   console.log('APP stop');
-  canStop.value = false;
   window.dispatchEvent(new CustomEvent('gol:stop'));
+  started.value = false;
+  paused.value = false;
 }
 
 const pause = () => {
   console.log('APP pause');
-  canStop.value = false;
   window.dispatchEvent(new CustomEvent('gol:pause'));
+  paused.value = true;
 }
 
 const clear = () => {
-  canStop.value = false;
+  console.log('APP clear');
   window.dispatchEvent(new CustomEvent('gol:clear'));
+  started.value = false;
+  paused.value = false;
 }
 
-window.addEventListener('gol:close-dialog', () => closeInfoDialog());
+
+onMounted(() => {
+  window.addEventListener('gol:close-dialog', () => closeInfoDialog());
+});
+
+onUpdated(() => {
+  console.log('onUpdated', started.value, paused.value, canPlay.value, canPause.value);
+})
 
 </script>
 

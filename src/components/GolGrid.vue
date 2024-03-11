@@ -6,7 +6,6 @@ const cols = 100;
 const rows = 50;
 
 const grid = ref([] as any);
-const running = ref(false);
 const gen = ref(0);
 const speed = ref(500);
 const generationTimer = ref(0);
@@ -117,19 +116,26 @@ const onCellClick = (x: number, y: number) => {
 
 const stop = () => {
   stopGeneration();
-  running.value = false;
+
+  console.log('stop');
 }
 
-const start = () => {
-  resetGrid();
-  startGeneration();
-  running.value = true;
+const pause = () => {
+  stopGeneration();
 
-  console.log('start', running.value);
+  console.log('pause');
+}
+
+const start = (data: any) => {
+  if (!data.detail.resume) {
+    resetGrid();
+    resetGen();
+  }
+  startGeneration();
 }
 
 const clear = () => {
-  if(generationTimer.value) {
+  if (generationTimer.value) {
     stop();
   }
   resetGrid(true);
@@ -143,6 +149,7 @@ const random = () => {
 
 const listenToEvents = () => {
   window.addEventListener('gol:start', start);
+  window.addEventListener('gol:pause', pause);
   window.addEventListener('gol:random', random);
   window.addEventListener('gol:clear', clear);
   window.addEventListener('gol:stop', stop);
@@ -150,6 +157,7 @@ const listenToEvents = () => {
 
 const stopListenToEvents = () => {
   window.removeEventListener('gol:start', start);
+  window.removeEventListener('gol:pause', pause);
   window.removeEventListener('gol:random', random);
   window.removeEventListener('gol:clear', clear);
   window.removeEventListener('gol:stop', stop);
@@ -181,15 +189,10 @@ const init = () => {
 }
 
 onMounted(init);
+
 onBeforeUnmount(() => {
   stopListenToEvents();
 });
-
-defineExpose({
-  running,
-  start,
-  stop
-})
 
 </script>
 
@@ -201,17 +204,11 @@ defineExpose({
   </div>
   <div class="gol-stats">
     <div class="box">
-      STATS
-    </div>
-    <div class="box">
       GEN: {{ gen }}
     </div>
     <div class="box">
       ALIVE: {{ population.alive }}
     </div>
-    <!-- <div class="box">
-      DEAD: {{ population.dead }}
-    </div> -->
   </div>
 </template>
 

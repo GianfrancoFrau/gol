@@ -1,6 +1,6 @@
 <template>
   <div class="backdrop" v-if="props.open">
-    <dialog :open="props.open">
+    <dialog :open="props.open" :class="dialogCss">
       <button class="dialog-close" @click="closeDialog()">
         <IconCloseSquare />
       </button>
@@ -13,6 +13,7 @@
 </template>
 
 <script setup lang="ts">
+import { computed, ref } from 'vue';
 import IconCloseSquare from './icons/IconCloseSquare.vue';
 
 const props = defineProps({
@@ -21,6 +22,14 @@ const props = defineProps({
     default: false
   },
 });
+
+// TODO change on dialog close
+const animation = ref('zoomIn')
+
+const dialogCss = computed(() => ({
+  animate__animated: true,
+  [`animate__${animation.value}`]: true
+}))
 
 const closeDialog = () => {
   window.dispatchEvent(new CustomEvent('gol:close-dialog'));
