@@ -16,10 +16,10 @@
         <IconStop />
       </button>
       <button class="btn" @click="clear()">
-        reset
+        <IconReset />
       </button>
       <button class="btn" @click="openInfoDialog()">
-        info
+        <IconInfoSquareFill />
       </button>
     </div>
   </header>
@@ -28,20 +28,22 @@
     <GolGrid></GolGrid>
   </main>
 
-  <InfoDialog :open="infoDialogOpen"></InfoDialog>
+  <InfoDialog :title="title" :open="infoDialogOpen"></InfoDialog>
 </template>
 
 <script setup lang="ts">
 
 import IconStop from './components/icons/IconStop.vue';
+import IconReset from './components/icons/IconReset.vue';
 import IconShuffle from './components/icons/IconShuffle.vue';
 import GolGrid from '@/components/GolGrid.vue';
 import { computed, onMounted, onUpdated, ref } from 'vue';
 import InfoDialog from './components/InfoDialog.vue';
 import IconPlay from './components/icons/IconPlay.vue';
 import IconPause from './components/icons/IconPause.vue';
+import IconInfoSquareFill from './components/icons/IconInfoSquareFill.vue';
 
-const title = ref('GOL');
+const title = ref('VUE GOL');
 const infoDialogOpen = ref(false);
 const started = ref(false);
 const paused = ref(false);

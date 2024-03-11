@@ -204,10 +204,12 @@ onBeforeUnmount(() => {
   </div>
   <div class="gol-stats">
     <div class="box">
-      GEN: {{ gen }}
+      GENERATION
+      <span>{{ gen }}</span>
     </div>
     <div class="box">
-      ALIVE: {{ population.alive }}
+      ALIVE
+      <span>{{ population.alive }}</span>
     </div>
   </div>
 </template>
@@ -234,6 +236,17 @@ onBeforeUnmount(() => {
   border: 1px solid var(--color-border);
   border-radius: var(--border-radius);
 
-  .box {}
+  .box {
+    display: flex;
+    align-items: center;
+    
+    span {
+      padding: 0.4rem 1rem;
+      border: 1px solid var(--color-border);
+      border-radius: var(--border-radius);
+      margin-left: 20px;
+      font-weight: bold;
+    }
+  }
 }
 </style>

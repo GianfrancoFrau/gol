@@ -5,8 +5,13 @@
         <IconCloseSquare />
       </button>
       <header>
-        <h1>GOL</h1>
-        <h2>A <a href="#">Game Of Life</a> implementation using <a href="#">vuejs 3</a></h2>
+        <h1>{{props.title}}</h1>
+        <h2>A <a href="https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life" target="_blank">Game Of Life</a> implementation in <a href="https://vuejs.org/" target="_blank">vuejs 3</a></h2>
+        <h3>Thanks to <a href="https://icons.getbootstrap.com/" target="_blank">Bootstrap Icons</a></h3>
+        <p class="footer">
+          <span class="version">version <b>{{ version }}</b></span>
+          <a href="https://github.com/GianfrancoFrau/vue-gol" target="_blank">Source code</a>
+        </p>
       </header>
     </dialog>
   </div>
@@ -21,9 +26,15 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
+  title: {
+    type: String,
+    default: ''
+  }
 });
 
-// TODO change on dialog close
+const version = ref(APP_VERSION);
+
+// TODO change on dialog close ?
 const animation = ref('zoomIn')
 
 const dialogCss = computed(() => ({
@@ -47,7 +58,7 @@ const closeDialog = () => {
   background-color: #00000050;
 
   dialog {
-    // align-self: center;
+    align-self: center;
     justify-self: center;
     overflow-y: scroll;
     background-color: #00000095;
@@ -88,6 +99,23 @@ const closeDialog = () => {
 
     h2 {
       font-size: 1.2rem;
+      margin-bottom: 1rem;
+    }
+
+    h3 {
+      font-size: 1rem;
+    }
+
+    .footer {
+      margin-top: 2rem;
+      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      span {
+        
+      }
     }
   }
 }

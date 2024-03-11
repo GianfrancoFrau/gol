@@ -14,5 +14,9 @@ export default defineConfig({
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
+  },
+  define: {
+    APP_VERSION: JSON.stringify(process.env.npm_package_version),
+    BUILD_TS: new Date()
   }
 })
