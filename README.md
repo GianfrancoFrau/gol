@@ -2,7 +2,7 @@
 
 # <a href="https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life" target="_blank">Game Of Life</a> implemention in <a href="https://vuejs.org/" target="_blank">Vue 3</a>.
 
-A little exercise to learn and experiment with vue js 3.
+A little exercise to learn and experiment with Vue 3.
 
 ## Goals and features
 
