@@ -128,20 +128,24 @@ header {
     display: flex;
 
     .btn {
-      padding: 0.5rem;
+      padding: 1rem;
       display: flex;
       align-content: center;
-      background-color: transparent;
+      background-color: #00000025;
       color: var(--color-text);
       border: 1px solid var(--color-border);
       margin-right: 0.3rem;
+
+      &:hover:not(:disabled) {
+        background-color: #00000050;
+      }
 
       &:disabled {
         opacity: 0.6;
       }
 
       svg {
-        transform: scale(1.2);
+        transform: scale(1.5);
       }
 
       &:last-child {

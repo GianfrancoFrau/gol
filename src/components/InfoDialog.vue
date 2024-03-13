@@ -55,13 +55,13 @@ const closeDialog = () => {
   width: 100vw;
   height: 100vh;
   display: flex;
-  background-color: #00000050;
+  background-color: #00000099;
 
   dialog {
     align-self: center;
     justify-self: center;
     overflow-y: scroll;
-    background-color: #00000095;
+    background-color: #00000099;
     color: white;
     border: 0;
     border-radius: var(--border-radius);
